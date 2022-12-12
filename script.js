@@ -9,7 +9,6 @@ const players = function(name, symbol) {
 const gameboard = (function() {
     let stateOfGameboard = ['x','o', '', 'x', 'o', 'o', '', 'x', ''];
     
-    
     const render = () => {
         const gameboard = document.querySelector('.gameboard');
         stateOfGameboard.forEach((symbol, index) => {
