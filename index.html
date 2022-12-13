@@ -9,16 +9,39 @@
     <script src="./script.js" defer></script>
 </head>
 <body>
-    <div class="gameboard">
-        <div class="game-square" id="game-square-1">1</div>
-        <div class="game-square" id="game-square-2">2</div>
-        <div class="game-square" id="game-square-3">3</div>
-        <div class="game-square" id="game-square-4">4</div>
-        <div class="game-square" id="game-square-5">5</div>
-        <div class="game-square" id="game-square-6">6</div>
-        <div class="game-square" id="game-square-7">7</div>
-        <div class="game-square" id="game-square-8">8</div>
-        <div class="game-square" id="game-square-9">9</div>
+    <div class="wrapper">
+        <div class="player-modal hidden">
+            <form action="">
+                <div class="player player1">
+                    <label for="player-1-name">Player 1 name</label>
+                    <input type="text" id="player-1-name">
+                </div>
+                <div class="player player2">
+                    <label for="player-2-name">Player 2 name</label>
+                    <input type="text" id="player-2-name">
+                </div>
+                <div>
+                    <button id="start-game-button" type="button">Start game</button>
+                </div>
+                <div>
+                    <button id="restart-game-button" type="button">Restart game</button>
+                </div>
+
+            </form>
+        </div>
+        <div class="gameboard">
+            <div class="game-square" data-id="0" id="game-square-1">1</div>
+            <div class="game-square" data-id="1" id="game-square-2">2</div>
+            <div class="game-square" data-id="2" id="game-square-3">3</div>
+            <div class="game-square" data-id="3" id="game-square-4">4</div>
+            <div class="game-square" data-id="4" id="game-square-5">5</div>
+            <div class="game-square" data-id="5" id="game-square-6">6</div>
+            <div class="game-square" data-id="6" id="game-square-7">7</div>
+            <div class="game-square" data-id="7" id="game-square-8">8</div>
+            <div class="game-square" data-id="8" id="game-square-9">9</div>
+        </div>
+
     </div>
+
 </body>
 </html>
