@@ -28,3 +28,15 @@ body {
 button.hidden {
     display: none;
 }
+
+.game-end--wrapper {
+    width: 100vw;
+    height: 100vh;
+    
+    background: rgba(224, 2, 2, 0.3);
+    z-index: 1;
+}
+
+.hidden--wrapper {
+    display: none;
+}

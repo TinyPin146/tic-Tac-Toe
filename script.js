@@ -24,12 +24,12 @@ const gameboard = (function() {
     let stateOfGameboard = ['','', '', '', '', '', '', '', ''];
     const gameboardTable = document.querySelector('.gameboard');
     
-    const render = () => {
-        stateOfGameboard.forEach((symbol, index) => {
+    const render = function(arr = stateOfGameboard) {
+        arr.forEach((symbol, index) => {
             gameboardTable.querySelector(`#game-square-${index + 1}`).textContent = symbol;
         })
     }
-    const playerMarksSpot = function(elementValue, elementDatasetID, symbolOfPlayer) {
+    const playerMarksSpot = function(elementValue, elementDatasetID = '', symbolOfPlayer = '') {
         stateOfGameboard.splice(elementDatasetID, 1, symbolOfPlayer);
         render();
     }
@@ -41,6 +41,7 @@ const gameboard = (function() {
     return {
         stateOfGameboard,
         playerMarksSpot,
+        render,
     }
 })()
 
@@ -61,7 +62,7 @@ const flowControl = (function() {
 
     // * Creating players
     const generatePlayerObjects = function(player1Name, player2Name) {
-        if (players.player1 || players.player2) return;
+        if (players.player1 && players.player2) return;
         players.player1 = players.playerFactory(player1Name, 'X', true);
         players.player2 = players.playerFactory(player2Name, 'O', false);
     }
@@ -72,12 +73,12 @@ const flowControl = (function() {
             alert('Please initiate the game!');
             return;
         }
+
         const currentTargetValue = e.target.textContent;
         const currentTargetDatasetID = e.target.dataset.id;
         const currentPlayerSymbol = players.player1.hasTheTurn ? players.player1.symbol : players.player2.symbol;
         
         if (e.target.textContent !== '') {
-            console.log('There is already something!');
             return;
         }
         gameboard.playerMarksSpot(currentTargetValue, currentTargetDatasetID, currentPlayerSymbol);
@@ -91,7 +92,7 @@ const flowControl = (function() {
     // * Checking for win || draw
     const checkGameStatus = function() {        
         if (!gameboard.stateOfGameboard.some(value => value === '')) {
-            console.log('the game is a draw');
+            gameEndAndRestart('', true);
             return;
         }
         const rowsOfGameboard = getRows(gameboard.stateOfGameboard)
@@ -121,7 +122,6 @@ const flowControl = (function() {
                     return false;
                 });
             });
-            console.log(winningArray);
             
             const winnerIndex = winningArray.findIndex(e => e === true);
             if (winnerIndex === -1) return;
@@ -131,11 +131,44 @@ const flowControl = (function() {
         }
     }
 
-    // * Announcing winner & restarting option
-    function gameEndAndRestart(symbol) {
-        console.log(`The winner is ${symbol}`);
+    function gameEndAndRestart(symbol, isDraw = false) {
+        gameInterface.querySelector('.gameboard').removeEventListener('click', playersTakingTurns);
 
+        const gameEndCard = document.querySelector('.game-end--wrapper'); 
+        const gameEndCardH1 = gameEndCard.querySelector('h1');
+        const gameEndRestartBtn = gameEndCard.querySelector('.restart-game--btn');
+        const gameEndRestartWithNewNamesBtn = gameEndCard.querySelector('.restart-game-newNames--btn');
+        
+        gameEndCard.classList.remove('hidden--wrapper');
+        
+        function gameEndRestart() {
+            gameboard.stateOfGameboard.fill('');
+            gameboard.render();
+            gameEndCard.classList.add('hidden--wrapper');
+            gameInterface.querySelector('.gameboard').addEventListener('click', playersTakingTurns)
+            
+            if (symbol === 'X') {
+                players.player2.hasTheTurn = true;
+                players.player1.hasTheTurn = false; 
+            } else if (symbol === 'O') {
+                players.player2.hasTheTurn = false;
+                players.player1.hasTheTurn = true; 
+            } else if (isDraw) {
+                // TODO Complete code to swap player order when the result is draw
+            }
+            getPlayerData();
+            console.log(players.player1, players.player2);
+        }
+        
+        gameEndRestartBtn.addEventListener('click', gameEndRestart);
+        if (isDraw) {
+            gameEndCardH1.textContent = 'You have reached a draw. You can restart the game!';
+            return;
+        }
+        const winnerPlayer = players.player1.symbol === `${symbol}` ? players.player1 : players.player2;
+        gameEndCardH1.textContent = `The winner is ${winnerPlayer.name}! Congrats!`;
     }
+    
     // ! Event handlers
     function evenListeners() {
         gameInterface.querySelector('#start-game-button').addEventListener('click', getPlayerData);
