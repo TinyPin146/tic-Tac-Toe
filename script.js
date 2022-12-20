@@ -54,7 +54,7 @@ const flowControl = (function() {
         const player2NameInput = gameInterface.querySelector('#player-2-name').value;
         
         if (player1NameInput === '' || player2NameInput === '') {
-            console.log('No/missing data');
+            gameInterface.querySelectorAll('label').forEach(e => e.style.color = 'red');
             return;
         }
         generatePlayerObjects(player1NameInput, player2NameInput)
@@ -91,13 +91,7 @@ const flowControl = (function() {
 
     // * Checking for win || draw
     const checkGameStatus = function() {        
-        if (!gameboard.stateOfGameboard.some(value => value === '')) {
-            gameEndAndRestart('', true);
-            return;
-        }
-        const rowsOfGameboard = getRows(gameboard.stateOfGameboard)
-        checkIfSomeoneWon(rowsOfGameboard)
-
+        
         function getRows(stateOfGameboard) {
             let valuesOfGameboard= [];
             // * Get Rows
@@ -114,7 +108,7 @@ const flowControl = (function() {
             return [...valuesOfGameboard]
         }
 
-        function checkIfSomeoneWon(rowsOfGameboard) {
+       function checkIfSomeoneWon(rowsOfGameboard) {
             const winningArray = rowsOfGameboard.map(valueArr => {
                 return valueArr.every(e => {
                     if (e === 'X' && !valueArr.includes('O')) return true;
@@ -124,11 +118,17 @@ const flowControl = (function() {
             });
             
             const winnerIndex = winningArray.findIndex(e => e === true);
+            if (!gameboard.stateOfGameboard.some(value => value === '')) {
+                gameEndAndRestart('draw', true);
+            }
             if (winnerIndex === -1) return;
 
             const winnerSymbol = rowsOfGameboard[winnerIndex][0];
             gameEndAndRestart(winnerSymbol);
         }
+
+        const rowsOfGameboard = getRows(gameboard.stateOfGameboard);
+        checkIfSomeoneWon(rowsOfGameboard);
     }
 
     function gameEndAndRestart(symbol, isDraw = false) {
@@ -141,26 +141,37 @@ const flowControl = (function() {
         
         gameEndCard.classList.remove('hidden--wrapper');
         
-        function gameEndRestart() {
+        function restart() {
             gameboard.stateOfGameboard.fill('');
             gameboard.render();
             gameEndCard.classList.add('hidden--wrapper');
             gameInterface.querySelector('.gameboard').addEventListener('click', playersTakingTurns)
             
-            if (symbol === 'X') {
-                players.player2.hasTheTurn = true;
-                players.player1.hasTheTurn = false; 
+            if (symbol === 'draw') {
             } else if (symbol === 'O') {
                 players.player2.hasTheTurn = false;
-                players.player1.hasTheTurn = true; 
-            } else if (isDraw) {
-                // TODO Complete code to swap player order when the result is draw
+                players.player1.hasTheTurn = true;
+            } else if (symbol === 'X' ) {
+                players.player2.hasTheTurn = true;
+                players.player1.hasTheTurn = false;
             }
             getPlayerData();
-            console.log(players.player1, players.player2);
+        }
+
+        function restartAndResetNames() {
+            gameboard.stateOfGameboard.fill('');
+            gameboard.render();
+            gameEndCard.classList.add('hidden--wrapper');
+            
+            delete players.player1;
+            delete players.player2;
+            gameInterface.querySelector('#player-1-name').value = '';
+            gameInterface.querySelector('#player-2-name').value = '';
+            init();
         }
         
-        gameEndRestartBtn.addEventListener('click', gameEndRestart);
+        gameEndRestartBtn.addEventListener('click', restart, {once: true,});
+        gameEndRestartWithNewNamesBtn.addEventListener('click', restartAndResetNames, {once: true,});
         if (isDraw) {
             gameEndCardH1.textContent = 'You have reached a draw. You can restart the game!';
             return;
@@ -170,13 +181,13 @@ const flowControl = (function() {
     }
     
     // ! Event handlers
-    function evenListeners() {
+    function eventListeners() {
         gameInterface.querySelector('#start-game-button').addEventListener('click', getPlayerData);
         gameInterface.querySelector('.gameboard').addEventListener('click', playersTakingTurns)
     }
     // ! Init
     function init() {
-        evenListeners()
+        eventListeners()
     }
     init()
 })()
