@@ -1,20 +1,35 @@
+:root {
+    --color-primary: #42a2c9;
+  --color-secondary: #90EE90;
+  --color-tertiary: #fc7843;
+  --color-quaternary: #818181;
+  --color-quinary: #eed0aa;
+  --color-septenary: #e6e6fa;
+  }
+
 html {
-    background: black;
-    color: white;
+    background: var(--color-quinary);
+    color-scheme: dark light;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bolder;
+    color: var(--color-quaternary);
 }
 
-body {
+.wrapper {
+    height: 80vh;
     box-sizing: border-box;
 
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
-    color-scheme: dark light;
 }
 .gameboard {
     display: grid;
     grid-template-columns: repeat(3, 150px);
     grid-template-rows: repeat(3, 150px);
+    background-color: var(--color-secondary);
+    margin: .5rem;
 }
 .game-square {
     width: 150px;
@@ -24,20 +39,59 @@ body {
     justify-content: center;
     align-items: center;
 
-    border: red 1px solid;
-}
-button.hidden {
-    display: none;
+    border: var(--color-quaternary) 5px solid;
+    background-color: var(--color-primary);
+    color: var(--color-tertiary);
+    font-size: 4rem;
+    font-weight: bolder;
 }
 
 .game-end--wrapper {
     width: 100vw;
     height: 100vh;
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     
-    background: rgba(224, 2, 2, 0.3);
-    z-index: 1;
+    background: rgba(119, 87, 27, 0.8);
+    color: var(--color-septenary);
+}
+.game-end--card > button {
+    min-width: 400px;
+    height: 50px;
+
+    font-size: 1.5rem;
+
+    color: var(--color-secondary);
+    background-color: var(--color-tertiary);
+    border: none;
+    border-radius: 10px;
 }
 
 .hidden--wrapper {
     display: none;
+}
+.player-modal * {
+    margin: .1rem;
+}
+
+.game-end--card > button:hover {
+    opacity: .8;
+}
+
+.player-score--div {
+    display: flex;
+    margin: none;
+}
+.player-score--div h3 {
+    margin: .1em 1.3rem;
+}
+
+.not-started {
+    opacity: .3;
 }

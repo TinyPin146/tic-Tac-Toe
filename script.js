@@ -11,6 +11,7 @@ const players = (function() {
                 name,
                 symbol,
                 hasTheTurn,
+                score: 0,
             }
         };
     return {
@@ -42,6 +43,7 @@ const gameboard = (function() {
         stateOfGameboard,
         playerMarksSpot,
         render,
+        gameboardTable,
     }
 })()
 
@@ -57,6 +59,7 @@ const flowControl = (function() {
             gameInterface.querySelectorAll('label').forEach(e => e.style.color = 'red');
             return;
         }
+        gameboard.gameboardTable.classList.remove('not-started');
         generatePlayerObjects(player1NameInput, player2NameInput)
     }
 
@@ -65,6 +68,8 @@ const flowControl = (function() {
         if (players.player1 && players.player2) return;
         players.player1 = players.playerFactory(player1Name, 'X', true);
         players.player2 = players.playerFactory(player2Name, 'O', false);
+        renderPlayerScore();
+        gameInterface.querySelectorAll('label').forEach(e => e.style.color = '');
     }
 
     // * Taking turns
@@ -119,16 +124,41 @@ const flowControl = (function() {
             
             const winnerIndex = winningArray.findIndex(e => e === true);
             if (!gameboard.stateOfGameboard.some(value => value === '')) {
+                addToPlayerScore('draw');
                 gameEndAndRestart('draw', true);
             }
             if (winnerIndex === -1) return;
 
             const winnerSymbol = rowsOfGameboard[winnerIndex][0];
+            addToPlayerScore(winnerSymbol);
             gameEndAndRestart(winnerSymbol);
+        }
+        
+        function addToPlayerScore(winningPlayerSymbol) {
+            if (winningPlayerSymbol === 'draw') {
+                renderPlayerScore();
+                return;
+            }
+            if (players.player1.symbol === winningPlayerSymbol) {
+                ++players.player1.score;
+                renderPlayerScore();
+                return;
+            }
+            ++players.player2.score;
+            renderPlayerScore();
         }
 
         const rowsOfGameboard = getRows(gameboard.stateOfGameboard);
         checkIfSomeoneWon(rowsOfGameboard);
+        
+    }
+
+    function renderPlayerScore() {
+        const player1 = players.player1;
+        const player2 = players.player2;
+       
+        gameInterface.querySelector('.player-score-1').textContent = `${player1.name}'s score: ${player1.score}`;
+        gameInterface.querySelector('.player-score-2').textContent = `${player2.name}'s score: ${player2.score}`;
     }
 
     function gameEndAndRestart(symbol, isDraw = false) {
@@ -167,6 +197,7 @@ const flowControl = (function() {
             delete players.player2;
             gameInterface.querySelector('#player-1-name').value = '';
             gameInterface.querySelector('#player-2-name').value = '';
+            gameboard.gameboardTable.classList.add('not-started');
             init();
         }
         
@@ -187,7 +218,7 @@ const flowControl = (function() {
     }
     // ! Init
     function init() {
-        eventListeners()
+        eventListeners();
     }
     init()
 })()

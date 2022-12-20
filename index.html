@@ -10,26 +10,27 @@
 </head>
 <body>
     <div class="wrapper">
-        <div class="player-modal hidden">
+        <h1>TOP - Tic-Tac-Toe</h1>
+        <div class="player-modal">
             <form action="">
                 <div class="player player1">
                     <label for="player-1-name">Player 1 name</label>
-                    <input type="text" id="player-1-name" value="test1">
+                    <input type="text" id="player-1-name" placeholder="Insert player1 name here">
                 </div>
                 <div class="player player2">
                     <label for="player-2-name">Player 2 name</label>
-                    <input type="text" id="player-2-name" value="test2">
+                    <input type="text" id="player-2-name" placeholder="Insert player1 name here">
                 </div>
                 <div>
                     <button id="start-game-button" type="button">Start game</button>
                 </div>
-                <div>
-                    <button id="restart-game-button" type="button" class="hidden">Restart game</button>
-                </div>
-
             </form>
         </div>
-        <div class="gameboard">
+        <div class="player-score--div">
+            <h3 class="player-score-1">Player 1 score: 0</h3>
+            <h3 class="player-score-2">Player 2 score: 0</h3>
+        </div>
+        <div class="gameboard not-started">
             <div class="game-square" data-id="0" id="game-square-1">1</div>
             <div class="game-square" data-id="1" id="game-square-2">2</div>
             <div class="game-square" data-id="2" id="game-square-3">3</div>
@@ -40,15 +41,15 @@
             <div class="game-square" data-id="7" id="game-square-8">8</div>
             <div class="game-square" data-id="8" id="game-square-9">9</div>
         </div>
-
     </div>
-        <div class="game-end--wrapper hidden--wrapper">
-            <div class="game-end--card">
-                <h1 class="game-end--display"></h1>
-                <button type="button" class="restart-game--btn">Restart the game</button>
-                <button type="button" class="restart-game-newNames--btn">Restart the game with new names</button>
-            </div>
+
+    <div class="game-end--wrapper hidden--wrapper">
+        <div class="game-end--card">
+            <h1 class="game-end--display"></h1>
+            <button type="button" class="restart-game--btn">Play next round</button>
+            <button type="button" class="restart-game-newNames--btn">Reset the game</button>
         </div>
+    </div>
 
 </body>
 </html>
